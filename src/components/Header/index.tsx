@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Layout, Button, Drawer, Switch, Flex, Typography } from 'antd';
+import { Layout, Button, Drawer, Switch, Flex, Typography, Grid } from 'antd';
 import { MenuOutlined, BulbOutlined, BulbFilled } from '@ant-design/icons';
 import { useThemeStore } from '../../store/themeStore';
-import { useLocation, useNavigate } from 'react-router-dom'; // ✨ 라우터 훅 추가
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const { Header: AntdHeader } = Layout;
 const { Text: AntdText } = Typography;
+const { useBreakpoint } = Grid; // ✨ Ant Design의 그리드 훅 사용
 
 // --- 🎨 Minimalist nabong() SVG Logo ---
 const NabongLogo = () => (
@@ -48,10 +49,13 @@ const NavItem = styled.button<{ $isDark: boolean }>`
 
 export default function Header() {
   const { isDarkMode, toggleTheme } = useThemeStore();
+  const screens = useBreakpoint(); // ✨ 현재 화면 사이즈 실시간 감지
+  const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  
-  const location = useLocation(); // ✨ 현재 경로 파악
-  const navigate = useNavigate(); // ✨ 페이지 이동
+
+  // md(768px) 이상이면 데스크탑으로 판단
+  const isDesktop = screens.md;
 
   const menuItems = [
     { key: 'about', label: '01. About', target: 'about' },
@@ -60,28 +64,28 @@ export default function Header() {
     { key: 'contact', label: '04. Contact', target: 'contact' },
   ];
 
-  // ✨ 스마트 내비게이션 함수
-const handleNavClick = (targetId: string) => {
-  setOpen(false);
-  
-  const lenis = (window as any).lenis;
-  const targetElement = document.getElementById(targetId);
+  // ✨ 스마트 내비게이션 (Lenis 연동)
+  const handleNavClick = (targetId: string) => {
+    setOpen(false);
+    const lenis = (window as any).lenis;
+    const targetElement = document.getElementById(targetId);
 
-  if (targetElement && lenis) {
-    // ✨ Lenis 전용 스크롤 메서드 사용
-    lenis.scrollTo(targetElement, {
-      offset: -80, // 헤더 높이만큼 띄워줌
-      duration: 1.5,
-    });
-  } else {
-    // 타 페이지(상세페이지)에 있을 경우 메인으로 이동
-    navigate(`/#${targetId}`);
-  }
-};
-  // ✨ 로고 클릭 시 이동
+    if (targetElement && lenis) {
+      lenis.scrollTo(targetElement, {
+        offset: -80,
+        duration: 1.5,
+      });
+    } else {
+      navigate(`/#${targetId}`);
+    }
+  };
+
+  // ✨ 로고 클릭 시 최상단 이동
   const handleLogoClick = () => {
     if (location.pathname === '/') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const lenis = (window as any).lenis;
+      if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       navigate('/');
     }
@@ -112,33 +116,35 @@ const handleNavClick = (targetId: string) => {
           </AntdText>
         </LogoWrapper>
 
-        {/* Desktop Navigation */}
-        <Flex align="center" gap={40} className="desktop-only">
-          {menuItems.map(item => (
-            <NavItem 
-              key={item.key} 
-              onClick={() => handleNavClick(item.target)} 
-              $isDark={isDarkMode}
-            >
-              {item.label}
-            </NavItem>
-          ))}
-          <Switch 
-            checkedChildren={<BulbFilled />} 
-            unCheckedChildren={<BulbOutlined />} 
-            checked={isDarkMode} 
-            onChange={toggleTheme}
-            style={{ backgroundColor: isDarkMode ? '#3B82F6' : undefined }}
+        {/* ✨ useBreakpoint 조건부 렌더링 적용 */}
+        {isDesktop ? (
+          /* Desktop Navigation */
+          <Flex align="center" gap={40}>
+            {menuItems.map(item => (
+              <NavItem 
+                key={item.key} 
+                onClick={() => handleNavClick(item.target)} 
+                $isDark={isDarkMode}
+              >
+                {item.label}
+              </NavItem>
+            ))}
+            <Switch 
+              checkedChildren={<BulbFilled />} 
+              unCheckedChildren={<BulbOutlined />} 
+              checked={isDarkMode} 
+              onChange={toggleTheme}
+              style={{ backgroundColor: isDarkMode ? '#3B82F6' : undefined }}
+            />
+          </Flex>
+        ) : (
+          /* Mobile Menu Trigger */
+          <Button 
+            type="text"
+            icon={<MenuOutlined style={{ fontSize: '20px', color: isDarkMode ? '#F8FAFC' : '#0F172A' }} />} 
+            onClick={() => setOpen(true)} 
           />
-        </Flex>
-
-        {/* Mobile Menu Trigger */}
-        <Button 
-          className="mobile-only"
-          type="text"
-          icon={<MenuOutlined style={{ fontSize: '20px', color: isDarkMode ? '#F8FAFC' : '#0F172A' }} />} 
-          onClick={() => setOpen(true)} 
-        />
+        )}
       </Flex>
 
       {/* Mobile Sidebar (Drawer) */}
@@ -169,11 +175,6 @@ const handleNavClick = (targetId: string) => {
           </Flex>
         </Flex>
       </Drawer>
-
-      <style>{`
-        @media (min-width: 769px) { .desktop-only { display: flex !important; } .mobile-only { display: none !important; } }
-        @media (max-width: 768px) { .desktop-only { display: none !important; } .mobile-only { display: flex !important; } }
-      `}</style>
     </AntdHeader>
   );
 }
