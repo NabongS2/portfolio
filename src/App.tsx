@@ -8,6 +8,7 @@ import ScenarioBuilderDetail from "./pages/ProjectDetail/ScenarioBuilder";
 import {useThemeStore} from "./store/themeStore";
 import GlobalStyle from "./styles/GlobalStyle";
 import {darkTheme, lightTheme} from "./styles/theme";
+import SmoothScroll from "./components/SmoothScroll";
 
 function App() {
   const {isDarkMode} = useThemeStore();
@@ -32,7 +33,7 @@ function App() {
         {/* 2. Styled-components 테마 설정 (커스텀 레이아웃용) */}
         <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
           <GlobalStyle />
-
+          <SmoothScroll />
           <Header />
 
           <main>

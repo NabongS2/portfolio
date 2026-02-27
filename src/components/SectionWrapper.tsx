@@ -40,7 +40,8 @@ export default function SectionWrapper({ children, id }: { children: React.React
       variants={container}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: false, amount: 0.2 }}
+      // ✨ margin을 주어 화면에 나타나기 200px 전부터 애니메이션 시작!
+      viewport={{ once: true, amount: 0.01, margin: "0px 0px -200px 0px" }}
       style={{ width: '100%', perspective: '1000px' }}
     >
       <Flex vertical gap={60}>

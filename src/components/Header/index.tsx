@@ -61,21 +61,23 @@ export default function Header() {
   ];
 
   // ✨ 스마트 내비게이션 함수
-  const handleNavClick = (targetId: string) => {
-    setOpen(false); // 모바일 드로어 닫기
+const handleNavClick = (targetId: string) => {
+  setOpen(false);
+  
+  const lenis = (window as any).lenis;
+  const targetElement = document.getElementById(targetId);
 
-    if (location.pathname === '/') {
-      // 1. 메인 페이지라면 해당 섹션으로 스크롤
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      // 2. 상세 페이지라면 메인으로 이동하면서 해시 전달
-      navigate(`/#${targetId}`);
-    }
-  };
-
+  if (targetElement && lenis) {
+    // ✨ Lenis 전용 스크롤 메서드 사용
+    lenis.scrollTo(targetElement, {
+      offset: -80, // 헤더 높이만큼 띄워줌
+      duration: 1.5,
+    });
+  } else {
+    // 타 페이지(상세페이지)에 있을 경우 메인으로 이동
+    navigate(`/#${targetId}`);
+  }
+};
   // ✨ 로고 클릭 시 이동
   const handleLogoClick = () => {
     if (location.pathname === '/') {

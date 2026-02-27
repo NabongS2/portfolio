@@ -65,7 +65,8 @@ const projectList = [
       diagramIcon: <DesktopOutlined style={{ fontSize: "40px", color: "#3B82F6" }} />,
       diagramTitle: "WebAdmin Modernization Architecture",
       diagramDesc: "Redis(실시간 모니터링) & RabbitMQ(설정 배포) 기반 데이터 파이프라인",
-      onDetailClick: () => navigate("/project/web-admin"),
+      // onDetailClick: () => navigate("/project/web-admin"),
+      onDetailClick: undefined, 
     },
     {
       title: "STT 음성 인식 운영 관리 시스템 통합 구축",
@@ -77,7 +78,8 @@ const projectList = [
       diagramIcon: <AudioOutlined style={{ fontSize: "40px", color: "#10B981" }} />,
       diagramTitle: "Integrated Real-time Pipeline",
       diagramDesc: "STT Engine ↔ RabbitMQ/WS/SSE ↔ Web Admin UI 통합 구조",
-      onDetailClick: () => navigate("/project/stt-admin"),
+      // onDetailClick: () => navigate("/project/stt-admin"),
+      onDetailClick: undefined, 
     },
    {
       title: "AI 콜봇 시나리오 빌더 & NLP 사전 통합 관리 에디터",
