@@ -1,15 +1,16 @@
-import { ConfigProvider, theme as antdTheme } from "antd";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
+import {ConfigProvider, theme as antdTheme} from "antd";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {ThemeProvider} from "styled-components";
 
+import Header from "./components/header";
 import MainPage from "./pages/Main";
-import { useThemeStore } from "./store/themeStore";
+import ScenarioBuilderDetail from "./pages/ProjectDetail/ScenarioBuilder";
+import {useThemeStore} from "./store/themeStore";
 import GlobalStyle from "./styles/GlobalStyle";
-import { darkTheme, lightTheme } from "./styles/theme";
-import Header from "./components/Header";
+import {darkTheme, lightTheme} from "./styles/theme";
 
 function App() {
-  const { isDarkMode } = useThemeStore();
+  const {isDarkMode} = useThemeStore();
 
   return (
     // ✨ 최상단에 BrowserRouter 딱 하나만 감싸줍니다!
@@ -23,7 +24,7 @@ function App() {
           token: {
             // 피그마의 Primary 컬러(#3B82F6)를 Antd 전역에 강제 적용
             colorPrimary: "#3B82F6",
-            colorBgBase: isDarkMode ? '#0F172A' : '#F8FAFC',
+            colorBgBase: isDarkMode ? "#0F172A" : "#F8FAFC",
             fontFamily: "'Pretendard', sans-serif",
           },
         }}
@@ -37,9 +38,10 @@ function App() {
           <main>
             <Routes>
               <Route path="/" element={<MainPage />} />
+              {/* 프로젝트 상세 페이지 */}
               <Route
-                path="/work/:id"
-                element={<div>{/* 상세 페이지 */}</div>}
+                path="/project/scenario-builder"
+                element={<ScenarioBuilderDetail />}
               />
             </Routes>
           </main>

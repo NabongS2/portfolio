@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Layout, Button, Drawer, Switch, Flex, Typography, ConfigProvider } from 'antd';
+import { Layout, Button, Drawer, Switch, Flex, Typography } from 'antd';
 import { MenuOutlined, BulbOutlined, BulbFilled } from '@ant-design/icons';
 import { useThemeStore } from '../../store/themeStore';
+import { useLocation, useNavigate } from 'react-router-dom'; // ✨ 라우터 훅 추가
 
 const { Header: AntdHeader } = Layout;
 const { Text: AntdText } = Typography;
@@ -30,13 +31,16 @@ const LogoWrapper = styled(Flex)`
   }
 `;
 
-const NavItem = styled.a<{ $isDark: boolean }>`
+const NavItem = styled.button<{ $isDark: boolean }>`
+  background: none;
+  border: none;
+  cursor: pointer;
   color: ${({ $isDark }) => ($isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)')};
   font-weight: 500;
   font-size: 0.9rem;
   letter-spacing: 0.3px;
   transition: all 0.2s ease;
-  text-decoration: none;
+  padding: 0;
   &:hover { 
     color: #60A5FA; 
   }
@@ -45,13 +49,41 @@ const NavItem = styled.a<{ $isDark: boolean }>`
 export default function Header() {
   const { isDarkMode, toggleTheme } = useThemeStore();
   const [open, setOpen] = useState(false);
+  
+  const location = useLocation(); // ✨ 현재 경로 파악
+  const navigate = useNavigate(); // ✨ 페이지 이동
 
   const menuItems = [
-    { key: 'about', label: '01. About', href: '#about' },
-    { key: 'work', label: '02. Work', href: '#work' },
-    { key: 'tech', label: '03. Tech', href: '#tech' },
-    { key: 'contact', label: '04. Contact', href: '#contact' },
+    { key: 'about', label: '01. About', target: 'about' },
+    { key: 'work', label: '02. Work', target: 'work' },
+    { key: 'tech', label: '03. Tech', target: 'tech' },
+    { key: 'contact', label: '04. Contact', target: 'contact' },
   ];
+
+  // ✨ 스마트 내비게이션 함수
+  const handleNavClick = (targetId: string) => {
+    setOpen(false); // 모바일 드로어 닫기
+
+    if (location.pathname === '/') {
+      // 1. 메인 페이지라면 해당 섹션으로 스크롤
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // 2. 상세 페이지라면 메인으로 이동하면서 해시 전달
+      navigate(`/#${targetId}`);
+    }
+  };
+
+  // ✨ 로고 클릭 시 이동
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <AntdHeader
@@ -71,17 +103,21 @@ export default function Header() {
     >
       <Flex align="center" justify="space-between" style={{ width: '100%' }}>
         {/* Logo Section */}
-        <LogoWrapper align="center" gap={12} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <LogoWrapper align="center" gap={12} onClick={handleLogoClick}>
           <NabongLogo />
           <AntdText className="logo-text" style={{ color: isDarkMode ? '#F8FAFC' : '#0F172A' }}>
             nabong<span className="blue-accent">()</span>
           </AntdText>
         </LogoWrapper>
 
-        {/* Desktop Navigation Section using Antd Flex */}
+        {/* Desktop Navigation */}
         <Flex align="center" gap={40} className="desktop-only">
           {menuItems.map(item => (
-            <NavItem key={item.key} href={item.href} $isDark={isDarkMode}>
+            <NavItem 
+              key={item.key} 
+              onClick={() => handleNavClick(item.target)} 
+              $isDark={isDarkMode}
+            >
               {item.label}
             </NavItem>
           ))}
@@ -118,9 +154,8 @@ export default function Header() {
           {menuItems.map(item => (
             <NavItem 
               key={item.key} 
-              href={item.href} 
-              onClick={() => setOpen(false)} 
-              style={{ fontSize: '1.1rem' }}
+              onClick={() => handleNavClick(item.target)} 
+              style={{ fontSize: '1.1rem', textAlign: 'left' }}
               $isDark={isDarkMode}
             >
               {item.label}

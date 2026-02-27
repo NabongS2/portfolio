@@ -8,13 +8,13 @@ import WorkSection from './sections/WorkSection';
 import TechSection from './sections/TechSection';
 import ContactSection from './sections/ContactSection';
 import SectionWrapper from '../../components/SectionWrapper';
+import Footer from '../../components/Footer';
 
 const MainContainer = styled(Flex)`
   width: 100%;
   background-color: ${({ theme }) => theme.colors.background};
   /* 섹션 사이의 간격을 일정하게 유지 */
   gap: 120px; 
-  padding-bottom: 200px;
 `;
 
 export default function MainPage() {
@@ -43,6 +43,8 @@ export default function MainPage() {
       <SectionWrapper id="contact">
         <ContactSection />
       </SectionWrapper>
+
+      <Footer />
     </MainContainer>
   );
 }

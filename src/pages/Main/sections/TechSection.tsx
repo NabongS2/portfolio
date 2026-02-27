@@ -1,210 +1,346 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Typography, Row, Col } from 'antd';
-import { 
-  CodeOutlined, 
-  DatabaseOutlined, 
-  CloudServerOutlined, 
-  TeamOutlined, 
-  ReadOutlined, 
-  SafetyCertificateOutlined 
-} from '@ant-design/icons';
+import {
+  ApiOutlined,
+  CloudServerOutlined,
+  CodeOutlined,
+  DatabaseOutlined,
+  HighlightOutlined,
+  LaptopOutlined,
+  ReadOutlined,
+  SafetyCertificateOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import {Col, Divider, Row, Typography} from "antd";
+import styled from "styled-components";
+import TechCard from "../../../components/card/TechCard";
+import SectionHeader from "../../../components/header/SectionHeader";
 
-const { Title, Text, Paragraph } = Typography;
+const {Text} = Typography;
 
 const SectionContainer = styled.section`
   padding: 100px 10vw;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({theme}) => theme.colors.background};
 `;
 
-const SectionHeader = styled.div`
-  margin-bottom: 60px;
+const TimelineWrapper = styled.div`
+  padding-left: 16px;
+  border-left: 2px solid rgba(59, 130, 246, 0.2);
+  margin-top: 16px;
 `;
 
-const SectionNumber = styled(Text)`
-  color: ${({ theme }) => theme.colors.primary};
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-right: 12px;
-`;
+const TimelineItem = styled.div`
+  position: relative;
+  margin-bottom: 24px; /* ✨ 자격증이 많아져서 간격을 28px -> 24px로 살짝 줄임 */
+  padding-left: 20px;
 
-const StackCard = styled.div`
-  background-color: ${({ theme }) => theme.colors.cardBg};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 12px;
-  padding: 32px;
-  height: 100%;
-  transition: transform 0.3s ease;
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const CardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-`;
-
-const StackTitle = styled(Text)`
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const BadgeContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const TechBadge = styled.span<{ $primary?: boolean }>`
-  background: ${(props) => props.$primary ? 'rgba(59, 130, 246, 0.15)' : 'rgba(148, 163, 184, 0.1)'};
-  color: ${(props) => props.$primary ? '#3B82F6' : ({ theme }) => theme.colors.secondaryText};
-  border: 1px solid ${(props) => props.$primary ? 'rgba(59, 130, 246, 0.3)' : 'rgba(148, 163, 184, 0.2)'};
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   &::before {
-    content: '';
-    width: 6px;
-    height: 6px;
+    content: "";
+    position: absolute;
+    left: -21px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    background: #0f172a;
+    border: 2px solid #3b82f6;
     border-radius: 50%;
-    background-color: ${(props) => props.$primary ? '#3B82F6' : '#64748B'};
+  }
+
+  &:last-child {
+    margin-bottom: 0;
   }
 `;
 
-const InfoItem = styled.div`
-  margin-bottom: 20px;
-  &:last-child { margin-bottom: 0; }
+const TimelineDate = styled(Text)`
+  display: block;
+  color: #3b82f6;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
 `;
 
 export default function TechSection() {
+  const techData = [
+    {
+      title: "Frontend",
+      icon: <CodeOutlined style={{color: "#3B82F6", fontSize: "24px"}} />,
+      mainSkills: ["React", "TypeScript", "React Flow", "Zustand"],
+      subSkills: [
+        "JavaScript (ES6+)",
+        "HTML5 / CSS3",
+        "Styled-components",
+        "Ant Design",
+      ],
+    },
+    {
+      title: "Backend",
+      icon: <DatabaseOutlined style={{color: "#10B981", fontSize: "24px"}} />,
+      mainSkills: ["Java", "Spring Boot", "REST API Architecture"],
+      subSkills: ["Spring Framework", "JPA / Hibernate", "MyBatis"],
+    },
+    {
+      title: "Data & Middleware",
+      icon: <ApiOutlined style={{color: "#F43F5E", fontSize: "24px"}} />,
+      mainSkills: ["Redis", "RabbitMQ", "WebSocket / SSE"],
+      subSkills: ["MariaDB", "Oracle", "Webhook 연동"],
+    },
+    {
+      title: "DevOps",
+      icon: (
+        <CloudServerOutlined style={{color: "#A855F7", fontSize: "24px"}} />
+      ),
+      mainSkills: ["pnpm (Monorepo)", "Vite", "Docker", "Linux"],
+      subSkills: ["Nginx", "GitLab CI/CD"],
+    },
+    {
+      title: "Design",
+      icon: <HighlightOutlined style={{color: "#EC4899", fontSize: "24px"}} />,
+      mainSkills: ["Figma"],
+      subSkills: ["Photoshop", "Illustrator"],
+    },
+    {
+      title: "Collaboration",
+      icon: <TeamOutlined style={{color: "#F59E0B", fontSize: "24px"}} />,
+      mainSkills: ["Git / GitLab"],
+      subSkills: ["Storybook", "Jira / Redmine", "SVN", "Confluence"],
+    },
+  ];
+
+  // ... 렌더링 부분 ...
+  <Row gutter={[24, 24]}>
+    {techData.map((data, index) => (
+      <Col xs={24} md={12} lg={8} key={index}>
+        <TechCard
+          icon={data.icon}
+          title={data.title}
+          mainSkills={data.mainSkills}
+          subSkills={data.subSkills}
+        />
+      </Col>
+    ))}
+  </Row>;
+
   return (
     <SectionContainer id="tech">
-      <SectionHeader>
-        <SectionNumber>03.</SectionNumber>
-        <Title level={2} style={{ display: 'inline', fontWeight: 700 }}>Tech Stack & Info</Title>
-        <Paragraph style={{ color: '#94A3B8', fontSize: '1.1rem', marginTop: '8px' }}>
-          프로젝트에서 실전으로 사용한 기술 스택과 자격 정보입니다.
-        </Paragraph>
-      </SectionHeader>
+      <SectionHeader
+        index="03"
+        title="Tech Stack & Info"
+        subtitle="견고한 아키텍처를 설계하고 운영 효율을 높이기 위해 실무에서 적극적으로 활용하는 기술들입니다."
+      />
 
       <Row gutter={[24, 24]}>
-        {/* Frontend - 주력 기술 강조 [cite: 441, 443] */}
-        <Col xs={24} md={12}>
-          <StackCard>
-            <CardHeader>
-              <CodeOutlined style={{ color: '#3B82F6', fontSize: '20px' }} />
-              <StackTitle>Frontend</StackTitle>
-            </CardHeader>
-            <BadgeContainer>
-              <TechBadge $primary>React</TechBadge>
-              <TechBadge $primary>TypeScript</TechBadge>
-              <TechBadge $primary>React Flow</TechBadge>
-              <TechBadge>Zustand</TechBadge>
-              <TechBadge>Next.js</TechBadge>
-              <TechBadge>Tailwind CSS</TechBadge>
-              <TechBadge>Styled-components</TechBadge>
-              <TechBadge>Ant Design</TechBadge>
-            </BadgeContainer>
-          </StackCard>
+        {techData.map((data, index) => (
+          <Col xs={24} md={12} lg={8} key={index}>
+            <TechCard
+              icon={data.icon}
+              title={data.title}
+              mainSkills={data.mainSkills}
+              subSkills={data.subSkills}
+            />
+          </Col>
+        ))}
+      </Row>
+
+      <Divider
+        style={{
+          borderColor: "rgba(59, 130, 246, 0.2)",
+          margin: "80px 0 60px 0",
+        }}
+      >
+        <Text
+          style={{color: "#64748B", fontSize: "1rem", letterSpacing: "2px"}}
+        >
+          EDUCATION & CERTIFICATIONS
+        </Text>
+      </Divider>
+
+      <Row gutter={[24, 24]}>
+        {/* 1. Education (학력) */}
+        <Col xs={24} lg={8}>
+          <TechCard
+            icon={<ReadOutlined style={{color: "#3B82F6", fontSize: "24px"}} />}
+            title="Education"
+          >
+            <TimelineWrapper>
+              <TimelineItem>
+                <TimelineDate>2024.03 – 2026.02</TimelineDate>
+                <Text
+                  style={{
+                    display: "block",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    color: "#F8FAFC",
+                  }}
+                >
+                  한국방송통신대학교 (서울)
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.9rem"}}>
+                  컴퓨터과학과 (편입) · 학사 졸업 (3.9)
+                </Text>
+              </TimelineItem>
+
+              <TimelineItem>
+                <TimelineDate>2018.03 – 2020.02</TimelineDate>
+                <Text
+                  style={{
+                    display: "block",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    color: "#F8FAFC",
+                  }}
+                >
+                  숭의여자대학교 (서울)
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.9rem"}}>
+                  패션디자인과 · 전문학사 졸업 (3.95)
+                </Text>
+              </TimelineItem>
+            </TimelineWrapper>
+          </TechCard>
         </Col>
 
-        {/* Backend [cite: 442, 444, 446] */}
-        <Col xs={24} md={12}>
-          <StackCard>
-            <CardHeader>
-              <DatabaseOutlined style={{ color: '#10B981', fontSize: '20px' }} />
-              <StackTitle>Backend</StackTitle>
-            </CardHeader>
-            <BadgeContainer>
-              <TechBadge $primary>Spring Boot</TechBadge>
-              <TechBadge $primary>Java</TechBadge>
-              <TechBadge>JPA/Hibernate</TechBadge>
-              <TechBadge>MyBatis</TechBadge>
-              <TechBadge>Node.js</TechBadge>
-              <TechBadge>Express</TechBadge>
-            </BadgeContainer>
-          </StackCard>
+        {/* 2. Training (훈련 과정) */}
+        <Col xs={24} lg={8}>
+          <TechCard
+            icon={
+              <LaptopOutlined style={{color: "#A855F7", fontSize: "24px"}} />
+            }
+            title="Training"
+          >
+            <TimelineWrapper>
+              <TimelineItem>
+                <TimelineDate>2024.06 – 2024.07</TimelineDate>
+                <Text
+                  style={{
+                    display: "block",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    color: "#F8FAFC",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  AWS 클라우드 핵심 서비스 <br />
+                  (ECR · EKS 실습)
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.9rem"}}>
+                  솔데스크
+                </Text>
+              </TimelineItem>
+
+              <TimelineItem>
+                <TimelineDate>2023.02 – 2023.07 </TimelineDate>
+                <Text
+                  style={{
+                    display: "block",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                    color: "#F8FAFC",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  스마트웹 & 콘텐츠개발
+                  <br />
+                  (자바 기반 반응형 UI/UX 양성과정)
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.9rem"}}>
+                  KH 정보교육원
+                </Text>
+              </TimelineItem>
+            </TimelineWrapper>
+          </TechCard>
         </Col>
 
-        {/* Infra / DB [cite: 447, 449, 450, 452] */}
-        <Col xs={24} md={12}>
-          <StackCard>
-            <CardHeader>
-              <CloudServerOutlined style={{ color: '#A855F7', fontSize: '20px' }} />
-              <StackTitle>Infra / DB</StackTitle>
-            </CardHeader>
-            <BadgeContainer>
-              <TechBadge $primary>Redis</TechBadge>
-              <TechBadge $primary>RabbitMQ</TechBadge>
-              <TechBadge>MariaDB</TechBadge>
-              <TechBadge>Docker</TechBadge>
-              <TechBadge>Linux</TechBadge>
-              <TechBadge>Nginx</TechBadge>
-              <TechBadge>AWS EC2</TechBadge>
-            </BadgeContainer>
-          </StackCard>
-        </Col>
+        {/* 3. Certifications (자격증) */}
+        <Col xs={24} lg={8}>
+          <TechCard
+            icon={
+              <SafetyCertificateOutlined
+                style={{color: "#F59E0B", fontSize: "24px"}}
+              />
+            }
+            title="Certifications"
+          >
+            <TimelineWrapper>
+              <TimelineItem style={{marginBottom: "16px"}}>
+                <TimelineDate>2024.10</TimelineDate>
+                <Text
+                  style={{display: "block", fontWeight: 700, color: "#F8FAFC"}}
+                >
+                  리눅스마스터 2급
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.85rem"}}>
+                  한국정보통신진흥협회
+                </Text>
+              </TimelineItem>
 
-        {/* Collaboration [cite: 454, 456] */}
-        <Col xs={24} md={12}>
-          <StackCard>
-            <CardHeader>
-              <TeamOutlined style={{ color: '#F59E0B', fontSize: '20px' }} />
-              <StackTitle>Tools & Collaboration</StackTitle>
-            </CardHeader>
-            <BadgeContainer>
-              <TechBadge $primary>Git / GitLab</TechBadge>
-              <TechBadge $primary>pnpm / Monorepo</TechBadge>
-              <TechBadge>Jira</TechBadge>
-              <TechBadge>Confluence</TechBadge>
-              <TechBadge>Figma</TechBadge>
-              <TechBadge>Storybook</TechBadge>
-            </BadgeContainer>
-          </StackCard>
-        </Col>
+              <TimelineItem style={{marginBottom: "16px"}}>
+                <TimelineDate>2024.06</TimelineDate>
+                <Text
+                  style={{display: "block", fontWeight: 700, color: "#F8FAFC"}}
+                >
+                  정보처리기사
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.85rem"}}>
+                  한국산업인력공단
+                </Text>
+              </TimelineItem>
 
-        {/* Education [cite: 410, 416, 418] */}
-        <Col xs={24} md={12}>
-          <StackCard>
-            <CardHeader>
-              <ReadOutlined style={{ color: '#3B82F6', fontSize: '20px' }} />
-              <StackTitle>Education</StackTitle>
-            </CardHeader>
-            <InfoItem>
-              <Text style={{ display: 'block', fontWeight: 600, fontSize: '1rem' }}>한국방송통신대학교 컴퓨터과학과</Text>
-              <Text style={{ color: '#64748B', fontSize: '0.9rem' }}>3학년 편입 · 재학 중 (졸업예정: 2026.02) [cite: 410, 416, 418]</Text>
-            </InfoItem>
-          </StackCard>
-        </Col>
+              <TimelineItem style={{marginBottom: "16px"}}>
+                <TimelineDate>2023.10</TimelineDate>
+                <Text
+                  style={{display: "block", fontWeight: 700, color: "#F8FAFC"}}
+                >
+                  SQL 개발자 (SQLD)
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.85rem"}}>
+                  한국데이터베이스진흥센터
+                </Text>
+              </TimelineItem>
 
-        {/* Certifications [cite: 430, 433, 434, 435] */}
-        <Col xs={24} md={12}>
-          <StackCard>
-            <CardHeader>
-              <SafetyCertificateOutlined style={{ color: '#F59E0B', fontSize: '20px' }} />
-              <StackTitle>Certifications</StackTitle>
-            </CardHeader>
-            <Row justify="space-between" style={{ marginBottom: '8px' }}>
-              <Text style={{ fontWeight: 600 }}>정보처리기사</Text>
-              <Text style={{ color: '#64748B', fontSize: '0.85rem' }}>한국산업인력공단 [cite: 434]</Text>
-            </Row>
-            <Row justify="space-between" style={{ marginBottom: '8px' }}>
-              <Text style={{ fontWeight: 600 }}>SQL 개발자 (SQLD)</Text>
-              <Text style={{ color: '#64748B', fontSize: '0.85rem' }}>한국데이터베이스진흥센터 [cite: 435]</Text>
-            </Row>
-            <Row justify="space-between">
-              <Text style={{ fontWeight: 600 }}>리눅스마스터 2급</Text>
-              <Text style={{ color: '#64748B', fontSize: '0.85rem' }}>한국정보통신진흥협회 [cite: 433]</Text>
-            </Row>
-          </StackCard>
+              {/* ✨ 컴퓨터그래픽스운용기능사 추가 */}
+              <TimelineItem style={{marginBottom: "16px"}}>
+                <TimelineDate>2022.09</TimelineDate>
+                <Text
+                  style={{display: "block", fontWeight: 700, color: "#F8FAFC"}}
+                >
+                  컴퓨터그래픽스운용기능사
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.85rem"}}>
+                  한국산업인력공단
+                </Text>
+              </TimelineItem>
+
+              <TimelineItem style={{marginBottom: "16px"}}>
+                <TimelineDate>2022.09</TimelineDate>
+                <Text
+                  style={{display: "block", fontWeight: 700, color: "#F8FAFC"}}
+                >
+                  웹디자인 기능사
+                </Text>
+                <Text style={{color: "#94A3B8", fontSize: "0.85rem"}}>
+                  한국산업인력공단
+                </Text>
+              </TimelineItem>
+
+              {/* ✨ MOS 세부 항목 추가 */}
+              <TimelineItem style={{marginBottom: "0"}}>
+                <TimelineDate>2022.05</TimelineDate>
+                <Text
+                  style={{display: "block", fontWeight: 700, color: "#F8FAFC"}}
+                >
+                  MOS 2016 Master
+                </Text>
+                <Text
+                  style={{
+                    color: "#94A3B8",
+                    fontSize: "0.85rem",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  Word, Excel, PowerPoint, Access <br />
+                  Microsoft
+                </Text>
+              </TimelineItem>
+            </TimelineWrapper>
+          </TechCard>
         </Col>
       </Row>
     </SectionContainer>
