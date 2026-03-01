@@ -1,17 +1,21 @@
-import {ConfigProvider, theme as antdTheme} from "antd";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {ThemeProvider} from "styled-components";
+import { ConfigProvider, theme as antdTheme } from "antd";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
 
 import Header from "./components/header";
 import MainPage from "./pages/Main";
-import ScenarioBuilderDetail from "./pages/ProjectDetail/ScenarioBuilder";
-import {useThemeStore} from "./store/themeStore";
+import ScenarioBuilderDetail from "./pages/ProjectDetail/ScenarioBuilderDetail";
+import { useThemeStore } from "./store/themeStore";
 import GlobalStyle from "./styles/GlobalStyle";
-import {darkTheme, lightTheme} from "./styles/theme";
+import { darkTheme, lightTheme } from "./styles/theme";
 import SmoothScroll from "./components/SmoothScroll";
+import { PATH } from "./constant/path";
+import WebAdminDetail from "./pages/ProjectDetail/WebaAdminDetail";
+import STTAdminDetail from "./pages/ProjectDetail/STTAdminDetail";
+import MonorepoDetail from "./pages/ProjectDetail/MonorepoDetail";
 
 function App() {
-  const {isDarkMode} = useThemeStore();
+  const { isDarkMode } = useThemeStore();
 
   return (
     // ✨ 최상단에 BrowserRouter 딱 하나만 감싸줍니다!
@@ -38,11 +42,27 @@ function App() {
 
           <main>
             <Routes>
-              <Route path="/" element={<MainPage />} />
-              {/* 프로젝트 상세 페이지 */}
+              <Route path={PATH.HOME} element={<MainPage />} />
+              {/* 1. 시나리오 빌더 */}
               <Route
-                path="/project/scenario-builder"
+                path={PATH.PROJECT.SCENARIO_BUILDER}
                 element={<ScenarioBuilderDetail />}
+              />
+
+              {/* 2. WebAdmin 고도화 (앞으로 만들 페이지!) */}
+              <Route
+                path={PATH.PROJECT.WEB_ADMIN}
+                element={<WebAdminDetail />}
+              />
+
+              <Route
+                path={PATH.PROJECT.STT_ADMIN}
+                element={<STTAdminDetail />}
+              />
+
+              <Route
+                path={PATH.PROJECT.MONOREPO}
+                element={<MonorepoDetail />}
               />
             </Routes>
           </main>

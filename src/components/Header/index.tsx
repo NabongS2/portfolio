@@ -152,7 +152,6 @@ export default function Header() {
         placement="right"
         onClose={() => setOpen(false)}
         open={open}
-        width={260}
         styles={{ 
           body: { background: isDarkMode ? '#0B0F19' : '#F8FAFC', padding: '40px 24px' },
           header: { background: isDarkMode ? '#0B0F19' : '#F8FAFC', borderBottom: 'none' }
